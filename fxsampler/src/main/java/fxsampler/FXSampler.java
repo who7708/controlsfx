@@ -37,15 +37,8 @@ import javafx.geometry.Insets;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.control.ProgressIndicator;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
+import javafx.scene.control.*;
 import javafx.scene.control.TabPane.TabClosingPolicy;
-import javafx.scene.control.TextField;
-import javafx.scene.control.TreeCell;
-import javafx.scene.control.TreeItem;
-import javafx.scene.control.TreeView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
@@ -61,12 +54,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.ServiceLoader;
+import java.util.*;
 import java.util.function.Function;
 
 public final class FXSampler extends Application {
@@ -230,35 +218,35 @@ public final class FXSampler extends Application {
         samplesTreeView.requestFocus();
     }
 
-    public final GridPane getGrid() {
+    public GridPane getGrid() {
         return grid;
     }
 
-    public final TabPane getTabPane() {
+    public TabPane getTabPane() {
         return tabPane;
     }
     // should never be null
-    public final Tab getWelcomeTab() {
+    public Tab getWelcomeTab() {
         return welcomeTab;
     }
 
-    public final Tab getSampleTab() {
+    public Tab getSampleTab() {
         return sampleTab;
     }
 
-    public final Tab getJavaDocTab() {
+    public Tab getJavaDocTab() {
         return javaDocTab;
     }
 
-    public final Tab getSourceTab() {
+    public Tab getSourceTab() {
         return sourceTab;
     }
 
-    public final Tab getCssTab() {
+    public Tab getCssTab() {
         return cssTab;
     }
 
-    protected void buildSampleTree(String searchText) {
+    private void buildSampleTree(String searchText) {
         // rebuild the whole tree (it isn't memory intensive - we only scan
         // classes once at startup)
         root = new TreeItem<>(new EmptySample("FXSampler"));
@@ -286,7 +274,7 @@ public final class FXSampler extends Application {
         sort(root, Comparator.comparing(o -> o.getValue().getSampleName()));
     }
 
-    protected void changeSample() {
+    private void changeSample() {
         if (selectedSample == null) {
             return;
         }
@@ -388,6 +376,9 @@ public final class FXSampler extends Application {
     }
 
     private String getResource(InputStream is) {
+        if (is == null) {
+            return "";
+        }
         try (BufferedReader br = new BufferedReader(new InputStreamReader(is))) {
             String line;
             StringBuilder sb = new StringBuilder();
